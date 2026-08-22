@@ -5,8 +5,9 @@ type: software
 authors:
   - family-names: "Ayala Feliciano"
     given-names: "Daniel"
-version: "1.5.1"
+version: "1.6"
 date-released: "2026-08-22"
+repository-code: "https://github.com/danielayala2009-gif/Ayala-Omega-Lab"
 license: "AGPL-3.0-or-later"
 abstract: >-
   Ω-Lab is a blind localization simulation and benchmarking environment

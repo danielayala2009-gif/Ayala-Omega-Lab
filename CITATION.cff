@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use Ω-Lab or its frozen benchmark outputs in research, please cite the applicable official release."
+title: "Ω-Lab — Blind Localization Simulator"
+type: software
+authors:
+  - family-names: "Ayala Feliciano"
+    given-names: "Daniel"
+version: "1.5.1"
+date-released: "2026-08-22"
+license: "AGPL-3.0-or-later"
+abstract: >-
+  Ω-Lab is a blind localization simulation and benchmarking environment
+  with deterministic seeds, frozen benchmark conditions, comparator
+  methods, null calibration, local CSV spectrum analysis, and an
+  exportable audit ledger.
+keywords:
+  - "Ayala Ω Framework"
+  - "blind localization"
+  - "simulation"
+  - "benchmarking"
+  - "reproducibility"
+  - "Monte Carlo"
+  - "falsification"

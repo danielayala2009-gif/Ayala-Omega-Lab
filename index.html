@@ -1,0 +1,42 @@
+<!doctype html>
+<!--
+Ω-Lab — Blind Localization Simulator
+Copyright (C) 2026 Daniel Ayala Feliciano
+SPDX-License-Identifier: AGPL-3.0-or-later
+Scientific benchmark changes require a new scientific version.
+-->
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111315"><title>Ω-Lab</title>
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icons/icon.svg">
+<style>
+:root{color-scheme:light dark;--bg:#f7f7f5;--card:#fff;--txt:#16181a;--muted:#666;--bd:#d7d8d3}
+@media(prefers-color-scheme:dark){:root{--bg:#111315;--card:#181b1f;--txt:#f4f4f2;--muted:#a9adb3;--bd:#2a2f35}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1100px;margin:auto;padding:16px}.panel{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}.g4{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}
+.row{display:flex;gap:8px;flex-wrap:wrap}.muted{color:var(--muted)}button,select,input{font:inherit}
+button{min-height:44px;padding:10px 14px;border-radius:12px;border:1px solid var(--bd);font-weight:700}.primary{background:var(--txt);color:var(--bg)}label{display:block;margin:10px 0}input[type=range],select,input[type=number]{width:100%;min-height:42px}
+.metric{border:1px solid var(--bd);border-radius:14px;padding:12px}.big{font-size:1.3rem;font-weight:800}.small{font-size:.86rem}
+svg{width:100%;height:auto;display:block}table{width:100%;border-collapse:collapse}th,td{padding:7px;border-bottom:1px solid var(--bd);text-align:left}
+</style></head><body><main>
+<section class="panel"><div class="small muted">BLIND SIMULATION ENVIRONMENT</div><h1>Ω-Lab App v1.5.1</h1>
+<p class="muted">Installable PWA for blind simulation, frozen benchmarking, and local CSV spectrum analysis.</p>
+<div class="row"><button id="run" class="primary">Run Blind Experiment</button><button id="reveal" disabled>Reveal Ground Truth</button><button id="batch">Run Batch</button><button id="battery">Run Frozen Battery</button><button id="export" disabled>Export CSV</button></div></section>
+<section class="grid g2"><div class="panel"><h2>Simulation controls</h2>
+<label>Scenario<select id="scenario"><option value="localized">Single localized discrepancy</option><option value="broad">Broad smooth bias</option><option value="norm">Normalization-only shift</option><option value="double">Two localized features</option><option value="null">Null / noise only</option></select></label>
+<label>Amplitude <span id="ampL">1.00%</span><input id="amp" type="range" min="0" max="3" step=".05" value="1"></label>
+<label>Hidden center <span id="centerL">0.770 GeV</span><input id="center" type="range" min=".62" max=".86" step=".002" value=".77"></label>
+<label>Width σ <span id="widthL">0.018 GeV</span><input id="width" type="range" min=".006" max=".06" step=".002" value=".018"></label>
+<label>Noise <span id="noiseL">0.20%</span><input id="noise" type="range" min="0" max="1.5" step=".05" value=".2"></label>
+<label>Correlation <span id="corrL">0.40</span><input id="corr" type="range" min="0" max=".95" step=".05" value=".4"></label>
+<label>Bins <span id="binsL">56</span><input id="bins" type="range" min="28" max="112" step="7" value="56"></label>
+<label>Fixed seed<input id="seed" type="number" value="20260821" min="1" max="2147483646"></label>
+<label>Batch trials<select id="batchN"><option>100</option><option selected>250</option><option>500</option><option>1000</option></select></label>
+<button id="calibrate">Calibrate Null Threshold</button><div class="metric"><div class="small muted">Ω null threshold</div><div id="thr" class="big">0.004000</div></div></div>
+<div><div class="panel"><h2>Synthetic spectra</h2><p id="note" class="muted">Configure a scenario and run the experiment.</p><svg id="chart" viewBox="0 0 760 330"></svg></div>
+<div class="grid g4"><div class="metric"><span class="small muted">Ω estimate</span><div id="oe" class="big">—</div><div id="oerr" class="small muted">hidden</div></div><div class="metric"><span class="small muted">Pointwise max</span><div id="pe" class="big">—</div><div id="perr" class="small muted">hidden</div></div><div class="metric"><span class="small muted">χ² window</span><div id="ce" class="big">—</div><div id="cerr" class="small muted">hidden</div></div><div class="metric"><span class="small muted">Shape TV</span><div id="te" class="big">—</div><div id="terr" class="small muted">hidden</div></div></div>
+<div class="panel"><h2>Blind scoreboard</h2><div class="grid g4"><div class="metric"><span class="small muted">Trials</span><div id="trials" class="big">0</div></div><div class="metric"><span class="small muted">Ω hits</span><div id="hits" class="big">0</div></div><div class="metric"><span class="small muted">Ω median error</span><div id="med" class="big">—</div></div><div class="metric"><span class="small muted">False alarms</span><div id="fa" class="big">0</div></div></div><p id="status" class="muted">Batch mode idle.</p><div style="overflow:auto"><table><thead><tr><th>Method</th><th>Trials</th><th>Hit rate</th><th>Median error</th></tr></thead><tbody id="method"></tbody></table></div></div></div></section>
+<section class="panel"><h2>Research Mode</h2><p class="muted">Import a local CSV. Data stays on your device.</p><input id="file" type="file" accept=".csv,text/csv"><div id="rctl" class="grid g4" style="display:none;margin-top:12px"><label>X column<select id="xc"></select></label><label>Reference<select id="rc"></select></label><label>Comparator<select id="cc"></select></label><button id="analyzeCSV" class="primary">Analyze CSV</button></div><p id="rstatus" class="muted">No research CSV loaded.</p><div id="rresults" class="grid g4" style="display:none"><div class="metric"><span class="small muted">Rows</span><div id="rr" class="big">—</div></div><div class="metric"><span class="small muted">Ω estimate</span><div id="ro" class="big">—</div></div><div class="metric"><span class="small muted">Pointwise</span><div id="rp" class="big">—</div></div><div class="metric"><span class="small muted">Shape TV</span><div id="rt" class="big">—</div></div></div></section>
+<section class="panel"><div class="small muted">Ω-LAB BENCHMARK PROTOCOL v1.0 — FROZEN</div><h2>2,700 deterministic trials</h2><p>Localized, double-feature, normalization-only, null · amplitudes 0.25%, 0.50%, 1.00%, 2.00% · noise 0.10%, 0.30%, 0.60% · correlation 0.00, 0.40, 0.80 · 56 bins · 25 replications per cell · seed base 20260821 · hit tolerance ±25 MeV.</p></section>
+</main><script src="omega-core.js"></script></body></html>

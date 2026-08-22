@@ -1,0 +1,11 @@
+{
+  "name": "Ω-Lab — Blind Localization Simulator",
+  "short_name": "Ω-Lab",
+  "description": "Blind simulation, frozen benchmarking, and local spectrum analysis for the Ayala Ω Framework.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f7f5",
+  "theme_color": "#17191c",
+  "orientation": "any"
+}
